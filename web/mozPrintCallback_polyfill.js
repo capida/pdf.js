@@ -95,7 +95,7 @@
 
   var hasAttachEvent = !!document.attachEvent;
 
-  window.addEventListener('keydown', function(event) {
+  var listener = function(event) {
     // Intercept Cmd/Ctrl + P in all browsers.
     // Also intercept Cmd/Ctrl + Shift + P in Chrome and Opera
     if (event.keyCode === 80/*P*/ && (event.ctrlKey || event.metaKey) &&
@@ -117,15 +117,22 @@
     if (event.keyCode === 27 && canvases) { // Esc
       abort();
     }
-  }, true);
+  }
+
+  window.addEventListener('keydown', listener, true);
+  window.parent.addKeydownEventListener(listener);
+
   if (hasAttachEvent) {
-    document.attachEvent('onkeydown', function(event) {
+    var pDisp = function(event) {
       event = event || window.event;
       if (event.keyCode === 80/*P*/ && event.ctrlKey) {
         event.keyCode = 0;
         return false;
       }
-    });
+    }
+
+    document.attachEvent('onkeydown', pDisp);
+    window.parent.attachKeydownEvent(pDisp);
   }
 
   if ('onbeforeprint' in window) {

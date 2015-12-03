@@ -202,7 +202,7 @@ var Preferences = {
 //#endif
 
 //#if !(FIREFOX || MOZCENTRAL || CHROME)
-Preferences._writeToStorage = function (prefObj) {
+/*Preferences._writeToStorage = function (prefObj) {
   return new Promise(function (resolve) {
     localStorage.setItem('pdfjs.preferences', JSON.stringify(prefObj));
     resolve();
@@ -214,5 +214,5 @@ Preferences._readFromStorage = function (prefObj) {
     var readPrefs = JSON.parse(localStorage.getItem('pdfjs.preferences'));
     resolve(readPrefs);
   });
-};
+};*/
 //#endif

@@ -19,17 +19,17 @@
 ////Note: Keep in sync with extensions/chromium/preferences_schema.json !
 //#endif
 var DEFAULT_PREFERENCES = {
-  showPreviousViewOnLoad: true,
-  defaultZoomValue: '',
+  showPreviousViewOnLoad: false,
+  defaultZoomValue: 'page-width',
   sidebarViewOnLoad: 0,
   enableHandToolOnLoad: false,
   enableWebGL: false,
   pdfBugEnabled: false,
-  disableRange: false,
+  disableRange: true,
   disableStream: false,
   disableAutoFetch: false,
   disableFontFace: false,
-  disableTextLayer: false,
-  useOnlyCssZoom: false,
   externalLinkTarget: 0,
+  disableTextLayer: true,
+  useOnlyCssZoom: true
 };

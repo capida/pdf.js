@@ -637,11 +637,7 @@ function cleanupCSSSource(file) {
 // modern HTML5 browsers. Requires Google Closure Compiler.
 //
 target.minified = function() {
-  var compilerPath = process.env['CLOSURE_COMPILER'];
-  if (!compilerPath) {
-    echo('### Closure Compiler is not set. Specify CLOSURE_COMPILER variable');
-    exit(1);
-  }
+  var compilerPath = 'external/closure/compiler.jar';
 
   target.bundle({});
   target.locale();

@@ -28,8 +28,8 @@ html {
 
 body {
   height: 100%;
-  background-color: #404040;
-  background-image: url(images/texture.png);
+  background-color: #CBCFD4;
+  /*background-image: url(images/texture.png);*/
 }
 
 body,
@@ -292,11 +292,10 @@ html[dir='rtl'] #toolbarSidebar {
 #toolbarContainer, .findbar, .secondaryToolbar {
   position: relative;
   height: 32px;
-  background-color: #474747; /* fallback */
-  background-image: url(images/texture.png),
-                    linear-gradient(hsla(0,0%,32%,.99), hsla(0,0%,27%,.95));
+  background-color: #CBCFD4; /* fallback */
+  /*background-image: url(images/texture.png), linear-gradient(hsla(0,0%,32%,.99), hsla(0,0%,27%,.95));*/
 }
-html[dir='ltr'] #toolbarContainer, .findbar, .secondaryToolbar {
+/*html[dir='ltr'] #toolbarContainer, .findbar, .secondaryToolbar {
   box-shadow: inset 1px 0 0 hsla(0,0%,100%,.08),
               inset 0 1px 1px hsla(0,0%,0%,.15),
               inset 0 -1px 0 hsla(0,0%,100%,.05),
@@ -309,7 +308,7 @@ html[dir='rtl'] #toolbarContainer, .findbar, .secondaryToolbar {
               inset 0 -1px 0 hsla(0,0%,100%,.05),
               0 1px 0 hsla(0,0%,0%,.15),
               0 1px 1px hsla(0,0%,0%,.1);
-}
+}*/
 
 #toolbarViewer {
   height: 32px;
@@ -319,8 +318,8 @@ html[dir='rtl'] #toolbarContainer, .findbar, .secondaryToolbar {
   position: relative;
   width: 100%;
   height: 4px;
-  background-color: #333;
-  border-bottom: 1px solid #333;
+  background-color: #CBCFD4;
+  /*border-bottom: 1px solid #CBCFD4;*/
 }
 
 #loadingBar .progress {
@@ -329,7 +328,7 @@ html[dir='rtl'] #toolbarContainer, .findbar, .secondaryToolbar {
   left: 0;
   width: 0%;
   height: 100%;
-  background-color: #ddd;
+  background-color: #2FA9DB;
   overflow: hidden;
   -webkit-transition: width 200ms;
   transition: width 200ms;
@@ -1932,4 +1931,52 @@ html[dir='rtl'] #documentPropertiesOverlay .row > * {
   #scaleSelectContainer, #pageNumberLabel {
     display: none;
   }
+}
+
+#viewerContainer {
+  top: 0;
+}
+
+#viewer {
+  margin-top: 10px;
+}
+
+#zoomOptions {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  height: 44px;
+  padding: 0px;
+  background-color: black;
+  opacity: .6;
+}
+
+#zoomOptions button {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin: 0;
+  float: right;
+
+  cursor: pointer;
+  -webkit-appearance: none;
+  border: 0;
+  box-shadow: none;
+}
+
+#zoomAuto,
+#zoomIn,
+#zoomOut {
+  background: url('images/default-skin.png') 0 0 no-repeat;
+  background-size: 264px 88px;
+}
+
+#zoomIn {
+  background-position: -88px 0;
+}
+
+#zoomOut {
+  background-position: -132px 0;
 }
