@@ -33,6 +33,9 @@ var SCALE_SELECT_PADDING = 22;
 var PAGE_NUMBER_LOADING_INDICATOR = 'visiblePageIsLoading';
 var DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000;
 
+var PROPOSAL_ID = undefined;
+var PREVIEW = false;
+
 PDFJS.imageResourcesPath = './images/';
 //#if (FIREFOX || MOZCENTRAL || GENERIC || CHROME)
 //PDFJS.workerSrc = '../build/pdf.worker.js';
@@ -426,62 +429,61 @@ var PDFViewerApplication = {
    *                            and optionally a 'stack' property.
    */
   error: function pdfViewError(message, moreInfo) {
-    var moreInfoText = mozL10n.get('error_version_info',
+    var error = {proposalId: PROPOSAL_ID};
+
+    error.message = mozL10n.get('error_version_info',
         {version: PDFJS.version || '?', build: PDFJS.build || '?'},
-        'PDF.js v{{version}} (build: {{build}})') + '\n';
+        'PDF.js v{{version}} (build: {{build}})') + ' - ';
+
+    error.message += !!message ? message + ' - ' : '';
+
     if (moreInfo) {
-      moreInfoText +=
+      error.message +=
         mozL10n.get('error_message', {message: moreInfo.message},
           'Message: {{message}}');
       if (moreInfo.stack) {
-        moreInfoText += '\n' +
+        error.message += ' - ' +
           mozL10n.get('error_stack', {stack: moreInfo.stack},
             'Stack: {{stack}}');
       } else {
         if (moreInfo.filename) {
-          moreInfoText += '\n' +
+          error.message += ' - ' +
             mozL10n.get('error_file', {file: moreInfo.filename},
               'File: {{file}}');
         }
         if (moreInfo.lineNumber) {
-          moreInfoText += '\n' +
+          error.message += ' - ' +
             mozL10n.get('error_line', {line: moreInfo.lineNumber},
               'Line: {{line}}');
         }
       }
     }
 
+    var viewerContainer = document.getElementById("viewerContainer");
+    var zoomOptions = document.getElementById("zoomOptions");
     var errorWrapper = document.getElementById('errorWrapper');
+    var errorDownloadButton = document.getElementById('errorDownload');
+    var errorMessage = document.getElementById('errorMessage');
+
+    viewerContainer.setAttribute('hidden', 'true');
+    zoomOptions.setAttribute('hidden', 'true');
     errorWrapper.removeAttribute('hidden');
 
-    var errorMessage = document.getElementById('errorMessage');
-    errorMessage.textContent = message;
+    if(!PREVIEW) {
+      errorDownloadButton.removeAttribute('hidden');
+      errorDownloadButton.onclick = function () {
+        PDFViewerApplication.download();
+      };
+      errorMessage.textContent = 'Su navegador no es compatible';
 
-    var closeButton = document.getElementById('errorClose');
-    closeButton.onclick = function () {
-      errorWrapper.setAttribute('hidden', 'true');
-    };
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/Akra/services/admin/pdf-error', true);
+      xhr.setRequestHeader("Content-type", "application/json");
+      xhr.send(JSON.stringify(error));
 
-    var errorMoreInfo = document.getElementById('errorMoreInfo');
-    var moreInfoButton = document.getElementById('errorShowMore');
-    var lessInfoButton = document.getElementById('errorShowLess');
-    moreInfoButton.onclick = function () {
-      errorMoreInfo.removeAttribute('hidden');
-      moreInfoButton.setAttribute('hidden', 'true');
-      lessInfoButton.removeAttribute('hidden');
-      errorMoreInfo.style.height = errorMoreInfo.scrollHeight + 'px';
-    };
-    lessInfoButton.onclick = function () {
-      errorMoreInfo.setAttribute('hidden', 'true');
-      moreInfoButton.removeAttribute('hidden');
-      lessInfoButton.setAttribute('hidden', 'true');
-    };
-    moreInfoButton.oncontextmenu = noContextMenuHandler;
-    lessInfoButton.oncontextmenu = noContextMenuHandler;
-    closeButton.oncontextmenu = noContextMenuHandler;
-    moreInfoButton.removeAttribute('hidden');
-    lessInfoButton.setAttribute('hidden', 'true');
-    errorMoreInfo.value = moreInfoText;
+    } else {
+      errorMessage.textContent = 'El archivo PDF no es válido';
+    }
   },
 
   progress: function pdfViewProgress(level) {
@@ -796,8 +798,17 @@ function webViewerInitialized() {
   var queryString = document.location.search.substring(1);
   var params = parseQueryString(queryString);
   var file = params.file;
-
   var locale = 'es-AR' //PDFJS.locale || navigator.language;
+
+  if ('preview' in params) {
+    PREVIEW = (params['preview'] === 'true');
+  }
+
+  if (!PREVIEW && 'proposal' in params) {
+    PROPOSAL_ID = (params['proposal']);
+  }
+
+  PDFViewerApplication.url = file;
 
   window.parent.setPDFViewerApplication(PDFViewerApplication);
 
